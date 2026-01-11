@@ -30,7 +30,8 @@ RUN wget -O hytale-downloader.zip https://downloader.hytale.com/hytale-downloade
 # -------------------------------
 # Create non-root user and switch
 # -------------------------------
-RUN useradd -m -d /hytale hytale
+RUN useradd -m -d /hytale hytale && \
+  chown -R hytale:hytale /hytale
 USER hytale
 WORKDIR /hytale
 
