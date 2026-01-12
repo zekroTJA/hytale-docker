@@ -6,12 +6,12 @@ set -e
 # -------------------------------
 if [ "$ENABLE_AUTO_UPDATE" = "true" ]; then
     echo "Auto-update enabled. Downloading latest server..."
-    ./hytale-downloader server --output /hytale/server
+    ./hytale-downloader
     EXIT_CODE=$?
 
     if [ $EXIT_CODE -ne 0 ]; then
         echo "Downloader error: $EXIT_CODE"
-        if grep -q "403 Forbidden" <<< "$(./hytale-downloader version 2>&1 || true)"; then
+        if grep -q "403 Forbidden" <<< "$(./hytale-downloader -version 2>&1 || true)"; then
             echo "403 Forbidden detected! Clearing downloader credentials..."
             rm -f ~/.hytale-downloader-credentials.json
         fi
@@ -20,7 +20,7 @@ else
     echo "Auto-update disabled. Skipping download."
 fi
 
-cd /hytale/server
+cd /hytale/Server
 
 if [ ! -f "HytaleServer.jar" ]; then
     echo "ERROR: HytaleServer.jar not found!"
@@ -31,6 +31,14 @@ fi
 # Build Java command
 # -------------------------------
 JAVA_CMD="java"
+
+# Default heap settings
+JAVA_XMS="${JAVA_XMS:-4G}"
+JAVA_XMX="${JAVA_XMX:-4G}"
+
+# Apply heap settings when set
+[ -n "$JAVA_XMS" ] && JAVA_CMD+=" -Xms$JAVA_XMS"
+[ -n "$JAVA_XMX" ] && JAVA_CMD+=" -Xmx$JAVA_XMX"
 
 # Add AOT cache if enabled
 if [ "$USE_AOT_CACHE" = "true" ] && [ -f "HytaleServer.aot" ]; then
