@@ -55,7 +55,7 @@ ENV DISABLE_SENTRY="false"
 EXPOSE 5520/udp
 
 # Volume for persistent server data
-VOLUME ["/hytale/data"]
+VOLUME ["/hytale/Server"]
 
 # Start the server
 ENTRYPOINT ["/hytale/start.sh"]

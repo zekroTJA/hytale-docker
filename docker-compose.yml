@@ -6,7 +6,8 @@ services:
     ports:
       - "5520:5520/udp"
     volumes:
-      - ./data:/hytale/data
+      - ./data:/hytale/Server
+      - ./backups:/hytale/backups
     environment:
       HYTALE_PORT: "5520"
       USE_AOT_CACHE: "true"
